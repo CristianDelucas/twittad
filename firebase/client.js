@@ -1,5 +1,5 @@
 import { initializeApp } from "@firebase/app";
-import { getAuth, GithubAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GithubAuthProvider, signInWithPopup , onAuthStateChanged } from "firebase/auth";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -14,9 +14,49 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
+
+const mapUserFromFirebaseAuthToUser = (_user) =>{
+    
+      if(_user.user){
+        const {user} = _user;
+        const {displayName, photoURL, email} = user
+        return {
+          avatar: photoURL,
+          username:displayName,
+          email: email
+        }
+      }else{
+          
+          const {displayName, photoURL, email} = _user
+          return {
+            avatar: photoURL,
+            username:displayName,
+            email: email
+          }
+        
+      }
+      
+    
+}
+
+
+ export const onAuthStateChangedControl = (onChange) => {
+   const auth = getAuth();
+   return onAuthStateChanged(auth, (user) => {
+     if (user) {
+       const normalizedUser = mapUserFromFirebaseAuthToUser(user);
+       return onChange(normalizedUser);
+     } else {
+       return onChange(null);
+     }
+   });
+ };
+
+
+
 export const loginWithGitHub = () => {
   const githubProvider = new GithubAuthProvider();
   githubProvider.setCustomParameters(firebaseConfig);
   const auth = getAuth();
-  return signInWithPopup(auth, githubProvider);
+  return signInWithPopup(auth, githubProvider).then(mapUserFromFirebaseAuthToUser)
 };
