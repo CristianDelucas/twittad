@@ -1,25 +1,25 @@
-import Head from "next/head";
-import { useEffect, useState } from "react";
-import AppLayout from "../components/AppLayout/AppLayout";
-import Button from "../components/Button";
-import GitHub from "../components/Icons/Github";
-import { loginWithGitHub, onAuthStateChangedControl } from "../firebase/client";
-import { colors } from "../styles/theme";
+import Head from "next/head"
+import { useEffect, useState } from "react"
+import AppLayout from "../components/AppLayout/AppLayout"
+import Button from "../components/Button"
+import GitHub from "../components/Icons/Github"
+import { loginWithGitHub, onAuthStateChangedControl } from "../firebase/client"
+import { colors } from "../styles/theme"
 
 export default function Home() {
-  const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState(undefined)
 
-   useEffect(()=>{
+  useEffect(() => {
     onAuthStateChangedControl(setUser)
-   },[])
+  }, [])
 
   const handleClick = () => {
     loginWithGitHub()
       .then(setUser)
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   return (
     <>
@@ -43,13 +43,13 @@ export default function Home() {
                 <GitHub width={24} height={24} fill="#fff" />
                 Login with Github
               </Button>
-            ) }
-            {user && user.avatar && 
+            )}
+            {user && user.avatar && (
               <div>
-                <img src={user.avatar}/>
+                <img src={user.avatar} />
                 <strong>{user.username}</strong>
               </div>
-            }
+            )}
           </div>
 
           {/* <nav>
@@ -89,5 +89,5 @@ export default function Home() {
         `}
       </style>
     </>
-  );
+  )
 }
