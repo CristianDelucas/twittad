@@ -1,4 +1,6 @@
-export default function Github(props) {
+import * as React from "react"
+
+export default function GitHub(props) {
   return (
     <svg
       width={1024}

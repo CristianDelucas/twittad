@@ -1,22 +1,23 @@
-import AppLayout from "components/AppLayout/AppLayout"
-import Button from "components/Button/index"
-import useUser from "hooks/useUser"
-import { useRouter } from "next/router"
 import { useState } from "react"
+import AppLayout from "components/AppLayout"
+import Button from "components/Button"
+import useUser from "hooks/useUser"
+
+import { useRouter } from "next/router"
 import { addDevit } from "../../../firebase/client"
 
-export default function ComposeTweet() {
-  const COMPOSE_STATES = {
-    USER_NOT_KNOWN: 0,
-    LOADING: 0,
-    SUCCESS: 1,
-    ERROR: -1,
-  }
+const COMPOSE_STATES = {
+  USER_NOT_KNOWN: 0,
+  LOADING: 1,
+  SUCCESS: 2,
+  ERROR: -1,
+}
 
-  const router = useRouter()
-  const user = useUser()
-  const [status, setStatus] = useState(COMPOSE_STATES.USER_NOT_KNOWN)
+export default function ComposeTweet() {
   const [message, setMessage] = useState("")
+  const [status, setStatus] = useState(COMPOSE_STATES.USER_NOT_KNOWN)
+  const user = useUser()
+  const router = useRouter()
 
   const handleChange = (event) => {
     const { value } = event.target
@@ -41,8 +42,7 @@ export default function ComposeTweet() {
       })
   }
 
-  const isButtonDisabled =
-    message.length === 0 || status === COMPOSE_STATES.LOADING
+  const isButtonDisabled = !message.length || status === COMPOSE_STATES.LOADING
 
   return (
     <>
@@ -54,11 +54,10 @@ export default function ComposeTweet() {
             value={message}
           ></textarea>
           <div>
-            <Button disabled={isButtonDisabled}>Twitaddear</Button>
+            <Button disabled={isButtonDisabled}>Devitear</Button>
           </div>
         </form>
       </AppLayout>
-
       <style jsx>{`
         div {
           padding: 15px;
@@ -66,10 +65,10 @@ export default function ComposeTweet() {
 
         textarea {
           border: 0;
-          min-height: 200px;
           font-size: 21px;
-          outline: 0;
+          min-height: 200px;
           padding: 15px;
+          outline: 0;
           resize: none;
           width: 100%;
         }
