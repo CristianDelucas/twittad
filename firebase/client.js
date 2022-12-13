@@ -1,5 +1,12 @@
 import { initializeApp } from "@firebase/app"
 import {
+  addDoc,
+  collection,
+  getDocs,
+  getFirestore,
+  Timestamp,
+} from "firebase/firestore"
+import {
   getAuth,
   GithubAuthProvider,
   signInWithPopup,
@@ -17,23 +24,27 @@ const firebaseConfig = {
   measurementId: "G-3XQQZ6ZC0T",
 }
 
-initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig)
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app)
 
 const mapUserFromFirebaseAuthToUser = (_user) => {
   if (_user.user) {
     const { user } = _user
-    const { displayName, photoURL, email } = user
+    const { displayName, photoURL, email, uid } = user
     return {
       avatar: photoURL,
       username: displayName,
       email,
+      uid,
     }
   } else {
-    const { displayName, photoURL, email } = _user
+    const { displayName, photoURL, email, uid } = _user
     return {
       avatar: photoURL,
       username: displayName,
       email,
+      uid,
     }
   }
 }
@@ -53,4 +64,35 @@ export const loginWithGitHub = () => {
   return signInWithPopup(auth, githubProvider).then(
     mapUserFromFirebaseAuthToUser
   )
+}
+
+export const addDevit = ({ avatar, content, userId, userName }) => {
+  return addDoc(collection(db, "devits"), {
+    avatar,
+    content,
+    userId,
+    userName,
+    createAt: Timestamp.fromDate(new Date()),
+    likesCount: 0,
+    sharedCount: 0,
+  })
+}
+
+export const fetchLatestDevits = () => {
+  return getDocs(collection(db, "devits"))
+    .then(({ docs }) => {
+      return docs.map((doc) => {
+        const data = doc.data()
+        const id = doc.id
+        const { createAt } = data
+        const date = new Date(createAt.seconds * 1000)
+        const normalizedCreateAt = new Intl.DateTimeFormat("es-ES").format(date)
+        return {
+          ...data,
+          id,
+          createAt: normalizedCreateAt,
+        }
+      })
+    })
+    .catch((err) => console.error(err))
 }
