@@ -2,11 +2,11 @@ import Head from "next/head"
 import { useEffect } from "react"
 import AppLayout from "components/AppLayout/AppLayout"
 import Button from "components/Button"
-import GitHub from "../components/Icons/GitHub"
-import { loginWithGitHub } from "../firebase/client"
+import GitHub from "components/Icons/GitHub"
+import { loginWithGitHub } from "firebase/client"
 import { colors } from "styles/theme"
 import { useRouter } from "next/router"
-import useUser, { USER_STATES } from "../hooks/useUser"
+import useUser, { USER_STATES } from "hooks/useUser"
 export default function Home() {
   const user = useUser()
   const router = useRouter()
