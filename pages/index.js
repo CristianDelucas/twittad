@@ -7,7 +7,7 @@ import GitHub from "components/Icons/GitHub"
 
 import { colors } from "styles/theme"
 
-import { loginWithGitHub } from "firebase/client"
+import { loginWithGitHub } from "../firebase/client"
 
 import { useRouter } from "next/router"
 import useUser, { USER_STATES } from "hooks/useUser"
