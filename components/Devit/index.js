@@ -18,7 +18,7 @@ export default function Devit({
           <header>
             <strong>{userName}</strong>
             <span> . </span>
-            <date>{createAt}</date>
+            <span id="date">{createAt}</span>
           </header>
 
           <p>{content}</p>
@@ -39,7 +39,7 @@ export default function Devit({
             line-height: 1.3125;
             margin: 0;
           }
-          date {
+          #date {
             color: #555;
             font-size: 14px;
           }
