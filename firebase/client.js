@@ -4,6 +4,8 @@ import {
   collection,
   getDocs,
   getFirestore,
+  orderBy,
+  query,
   Timestamp,
 } from "firebase/firestore"
 import {
@@ -72,25 +74,24 @@ export const addDevit = ({ avatar, content, userId, userName }) => {
     content,
     userId,
     userName,
-    createAt: Timestamp.fromDate(new Date()),
+    createdAt: Timestamp.fromDate(new Date()),
     likesCount: 0,
     sharedCount: 0,
   })
 }
 
-export const fetchLatestDevits = () => {
-  return getDocs(collection(db, "devits"))
+export const fetchLatestDevits = async () => {
+  return getDocs(query(collection(db, "devits"), orderBy("createdAt", "desc")))
     .then(({ docs }) => {
       return docs.map((doc) => {
         const data = doc.data()
         const id = doc.id
-        const { createAt } = data
-        const date = new Date(createAt.seconds * 1000)
-        const normalizedCreateAt = new Intl.DateTimeFormat("es-ES").format(date)
+        const { createdAt } = data
+        console.log(data)
         return {
           ...data,
           id,
-          createAt: normalizedCreateAt,
+          createdAt: +createdAt.toDate(),
         }
       })
     })

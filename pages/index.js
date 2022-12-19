@@ -29,14 +29,14 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>devter 🐦</title>
+        <title>Twittad 📧</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <AppLayout>
         <section>
           <img src="/logo-twittad.png" />
-          <h1>Devter</h1>
+          <h1>Twittad</h1>
           <h2>
             Talk about development
             <br />

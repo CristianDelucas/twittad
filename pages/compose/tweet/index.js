@@ -5,6 +5,7 @@ import useUser from "hooks/useUser"
 
 import { useRouter } from "next/router"
 import { addDevit } from "../../../firebase/client"
+import Head from "next/head"
 
 const COMPOSE_STATES = {
   USER_NOT_KNOWN: 0,
@@ -47,6 +48,9 @@ export default function ComposeTweet() {
   return (
     <>
       <AppLayout>
+        <Head>
+          <title>Crear un Twittad / Twittad</title>
+        </Head>
         <form onSubmit={handleSubmit}>
           <textarea
             onChange={handleChange}
