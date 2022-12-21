@@ -1,4 +1,3 @@
-import AppLayout from "components/AppLayout"
 import { useEffect, useState } from "react"
 import Devit from "components/Devit"
 import useUser from "hooks/useUser"
@@ -13,54 +12,51 @@ export default function HomePage() {
   const [timeline, setTimeline] = useState([])
   const user = useUser()
 
-  console.log(timeline)
-
   useEffect(() => {
     user && fetchLatestDevits().then(setTimeline)
   }, [user])
 
   return (
     <>
-      <AppLayout>
-        <Head>
-          <title>Inicio / Twittad</title>
-        </Head>
-        <header>
-          <h2>Inicio</h2>
-        </header>
-        <section>
-          {timeline.map(
-            ({ createdAt, id, userName, avatar, content, userId }) => (
-              <Devit
-                avatar={avatar}
-                createdAt={createdAt}
-                id={id}
-                key={id}
-                content={content}
-                userName={userName}
-                userId={userId}
-              />
-            )
-          )}
-        </section>
-        <nav>
-          <Link legacyBehavior href={"home"}>
-            <a>
-              <Home width={32} height={32} stroke={"#09f"} />
-            </a>
-          </Link>
-          <Link legacyBehavior href={"search"}>
-            <a>
-              <Search Search width={32} height={32} stroke={"#09f"} />
-            </a>
-          </Link>
-          <Link legacyBehavior href={"compose/tweet"}>
-            <a>
-              <Create width={32} height={32} stroke={"#09f"} />
-            </a>
-          </Link>
-        </nav>
-      </AppLayout>
+      <Head>
+        <title>Inicio / Twittad</title>
+      </Head>
+      <header>
+        <h2>Inicio</h2>
+      </header>
+      <section>
+        {timeline.map(
+          ({ createdAt, img, id, userName, avatar, content, userId }) => (
+            <Devit
+              avatar={avatar}
+              createdAt={createdAt}
+              id={id}
+              img={img}
+              key={id}
+              content={content}
+              userName={userName}
+              userId={userId}
+            />
+          )
+        )}
+      </section>
+      <nav>
+        <Link legacyBehavior href={"home"}>
+          <a>
+            <Home width={32} height={32} stroke={"#09f"} />
+          </a>
+        </Link>
+        <Link legacyBehavior href={"search"}>
+          <a>
+            <Search Search width={32} height={32} stroke={"#09f"} />
+          </a>
+        </Link>
+        <Link legacyBehavior href={"compose/tweet"}>
+          <a>
+            <Create width={32} height={32} stroke={"#09f"} />
+          </a>
+        </Link>
+      </nav>
       <style jsx>{`
         header {
           align-items: center;

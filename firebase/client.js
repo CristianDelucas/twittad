@@ -8,6 +8,7 @@ import {
   query,
   Timestamp,
 } from "firebase/firestore"
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage"
 import {
   getAuth,
   GithubAuthProvider,
@@ -68,10 +69,11 @@ export const loginWithGitHub = () => {
   )
 }
 
-export const addDevit = ({ avatar, content, userId, userName }) => {
+export const addDevit = ({ avatar, content, img, userId, userName }) => {
   return addDoc(collection(db, "devits"), {
     avatar,
     content,
+    img,
     userId,
     userName,
     createdAt: Timestamp.fromDate(new Date()),
@@ -87,7 +89,6 @@ export const fetchLatestDevits = async () => {
         const data = doc.data()
         const id = doc.id
         const { createdAt } = data
-        console.log(data)
         return {
           ...data,
           id,
@@ -96,4 +97,16 @@ export const fetchLatestDevits = async () => {
       })
     })
     .catch((err) => console.error(err))
+}
+
+export const uploadImage = (file) => {
+  const storage = getStorage()
+
+  // Create a storage reference from our storage service
+  const storageRef = ref(storage, `images/${file.name}`)
+
+  // Upload the file and metadata
+  const uploadTask = uploadBytesResumable(storageRef, file)
+
+  return uploadTask
 }
