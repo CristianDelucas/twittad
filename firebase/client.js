@@ -8,11 +8,13 @@ import {
   query,
   Timestamp,
 } from "firebase/firestore"
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage"
 import {
   getAuth,
   GithubAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
+  GoogleAuthProvider,
 } from "firebase/auth"
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -68,10 +70,20 @@ export const loginWithGitHub = () => {
   )
 }
 
-export const addDevit = ({ avatar, content, userId, userName }) => {
+export const loginWithGoogle = () => {
+  const googleProvider = new GoogleAuthProvider()
+  googleProvider.setCustomParameters(firebaseConfig)
+  const auth = getAuth()
+  return signInWithPopup(auth, googleProvider).then(
+    mapUserFromFirebaseAuthToUser
+  )
+}
+
+export const addDevit = ({ avatar, content, img, userId, userName }) => {
   return addDoc(collection(db, "devits"), {
     avatar,
     content,
+    img,
     userId,
     userName,
     createdAt: Timestamp.fromDate(new Date()),
@@ -96,4 +108,16 @@ export const fetchLatestDevits = async () => {
       })
     })
     .catch((err) => console.error(err))
+}
+
+export const uploadImage = (file) => {
+  const storage = getStorage()
+
+  // Create a storage reference from our storage service
+  const storageRef = ref(storage, `images/${file.name}`)
+
+  // Upload the file and metadata
+  const uploadTask = uploadBytesResumable(storageRef, file)
+
+  return uploadTask
 }

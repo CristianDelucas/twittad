@@ -7,10 +7,11 @@ import GitHub from "components/Icons/GitHub"
 
 import { colors } from "styles/theme"
 
-import { loginWithGitHub } from "../firebase/client"
+import { loginWithGitHub, loginWithGoogle } from "../firebase/client"
 
 import { useRouter } from "next/router"
 import useUser, { USER_STATES } from "hooks/useUser"
+import Google from "../components/Icons/Google"
 
 export default function Home() {
   const user = useUser()
@@ -22,6 +23,12 @@ export default function Home() {
 
   const handleClick = () => {
     loginWithGitHub().catch((err) => {
+      console.log(err)
+    })
+  }
+
+  const handleClickGoogle = () => {
+    loginWithGoogle().catch((err) => {
       console.log(err)
     })
   }
@@ -45,10 +52,16 @@ export default function Home() {
 
           <div>
             {user === USER_STATES.NOT_LOGGED && (
-              <Button onClick={handleClick}>
-                <GitHub fill="#fff" width={24} height={24} />
-                Login with GitHub
-              </Button>
+              <>
+                <Button onClick={handleClick}>
+                  <GitHub fill="#fff" width={24} height={24} />
+                  Login with GitHub
+                </Button>
+                <Button onClick={handleClickGoogle}>
+                  <Google width={24} height={24} />
+                  Login with Gmail
+                </Button>
+              </>
             )}
             {user === USER_STATES.NOT_KNOWN && <img src="/spinner.gif" />}
           </div>
