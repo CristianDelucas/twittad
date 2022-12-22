@@ -15,6 +15,7 @@ import {
   GithubAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
+  GoogleAuthProvider,
 } from "firebase/auth"
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -66,6 +67,15 @@ export const loginWithGitHub = () => {
   githubProvider.setCustomParameters(firebaseConfig)
   const auth = getAuth()
   return signInWithPopup(auth, githubProvider).then(
+    mapUserFromFirebaseAuthToUser
+  )
+}
+
+export const loginWithGoogle = () => {
+  const googleProvider = new GoogleAuthProvider()
+  googleProvider.setCustomParameters(firebaseConfig)
+  const auth = getAuth()
+  return signInWithPopup(auth, googleProvider).then(
     mapUserFromFirebaseAuthToUser
   )
 }

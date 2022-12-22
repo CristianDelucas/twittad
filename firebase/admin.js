@@ -9,6 +9,4 @@ try {
   })
 } catch (e) {}
 
-//
-
 export const firestore = admin.firestore()

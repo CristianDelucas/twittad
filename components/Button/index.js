@@ -21,6 +21,9 @@ export default function Button({ children, disabled, onClick }) {
             padding: 8px 24px;
             transition: opacity 0.3s ease;
             user-select: none;
+            margin: 4px 0;
+            width: 100%;
+            justify-content: center;
           }
 
           button[disabled] {

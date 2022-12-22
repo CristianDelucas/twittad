@@ -3,10 +3,10 @@ import Head from "next/head"
 
 import Button from "components/Button"
 import GitHub from "components/Icons/GitHub"
-
+import Google from "components/Icons/Google"
 import { colors } from "styles/theme"
 
-import { loginWithGitHub } from "../firebase/client"
+import { loginWithGitHub, loginWithGoogle } from "../firebase/client"
 
 import { useRouter } from "next/router"
 import useUser, { USER_STATES } from "hooks/useUser"
@@ -19,8 +19,14 @@ export default function Home() {
     user && router.replace("/home")
   }, [user])
 
-  const handleClick = () => {
+  const handleClickGithub = () => {
     loginWithGitHub().catch((err) => {
+      console.log(err)
+    })
+  }
+
+  const handleClickGoogle = () => {
+    loginWithGoogle().catch((err) => {
       console.log(err)
     })
   }
@@ -36,18 +42,26 @@ export default function Home() {
         <img src="/logo-twittad.png" />
         <h1>Twittad</h1>
         <h2>
-          Talk about development
+          Pequeña red social
           <br />
-          with developers 👩‍💻👨‍💻
+          de gente guay 👩‍💻👨‍💻
         </h2>
 
         <div>
           {user === USER_STATES.NOT_LOGGED && (
-            <Button onClick={handleClick}>
-              <GitHub fill="#fff" width={24} height={24} />
-              Login with GitHub
-            </Button>
+            <>
+              <Button className="" onClick={handleClickGithub}>
+                <GitHub fill="#fff" width={24} height={24} />
+                Login with GitHub
+              </Button>
+
+              <Button onClick={handleClickGoogle}>
+                <Google fill="#fff" width={24} height={24} />
+                Login with Gmail
+              </Button>
+            </>
           )}
+
           {user === USER_STATES.NOT_KNOWN && <img src="/spinner.gif" />}
         </div>
       </section>
@@ -59,6 +73,7 @@ export default function Home() {
         div {
           margin-top: 16px;
         }
+
         section {
           display: grid;
           height: 100%;
