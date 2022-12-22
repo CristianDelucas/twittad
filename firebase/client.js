@@ -2,8 +2,9 @@ import { initializeApp } from "@firebase/app"
 import {
   addDoc,
   collection,
-  getDocs,
   getFirestore,
+  limit,
+  onSnapshot,
   orderBy,
   query,
   Timestamp,
@@ -81,23 +82,34 @@ export const addDevit = ({ avatar, content, img, userId, userName }) => {
     sharedCount: 0,
   })
 }
-
-export const fetchLatestDevits = async () => {
-  return getDocs(query(collection(db, "devits"), orderBy("createdAt", "desc")))
-    .then(({ docs }) => {
-      return docs.map((doc) => {
-        const data = doc.data()
-        const id = doc.id
-        const { createdAt } = data
-        return {
-          ...data,
-          id,
-          createdAt: +createdAt.toDate(),
-        }
-      })
-    })
-    .catch((err) => console.error(err))
+export const listenLatestDevits = (callback) => {
+  return onSnapshot(
+    query(collection(db, "devits"), orderBy("createdAt", "desc"), limit(20)),
+    ({ docs }) => {
+      const newDevits = docs.map(mapDevitFromFirebaseToDevitObject)
+      callback(newDevits)
+    }
+  )
 }
+
+const mapDevitFromFirebaseToDevitObject = (doc) => {
+  const data = doc.data()
+  const id = doc.id
+  const { createdAt } = data
+  return {
+    ...data,
+    id,
+    createdAt: +createdAt.toDate(),
+  }
+}
+
+// export const fetchLatestDevits = async () => {
+//   return getDocs(query(collection(db, "devits"), orderBy("createdAt", "desc")))
+//     .then(({ docs }) => {
+//       return docs.map(mapDevitFromFirebaseToDevitObject)
+//     })
+//     .catch((err) => console.error(err))
+// }
 
 export const uploadImage = (file) => {
   const storage = getStorage()
